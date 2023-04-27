@@ -5,7 +5,7 @@ namespace ChemistWarehouseTechTest.Services.PizzaService
 {
     public interface IMenuService
     {
-        public GenericEntityResult<List<Pizza>> GetMenuByLocation(string location);
-        public GenericEntityResult<List<Pizza>> UpdateMenu(string pizzeriaName, List<Pizza> pizzas);
+        public Task<GenericEntityResult<List<Pizza>>> GetMenuByLocation(string location);
+        public Task<GenericEntityResult<List<Pizza>>> UpdateMenu(Guid pizzeriaId, List<Pizza> pizzas);
     }
 }

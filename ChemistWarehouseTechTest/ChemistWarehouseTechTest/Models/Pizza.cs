@@ -17,8 +17,8 @@ namespace ChemistWarehouseTechTest.Models
         public Guid PizzeriaId { get; set; }
 
         [ForeignKey("PizzeriaId")]
-        public Pizzeria Pizzeria { get; set; }
+        public Pizzeria? Pizzeria { get; set; }
 
-        public List<string> Toppings { get; set; }
+        public List<string>? Toppings { get; set; }
     }
 }

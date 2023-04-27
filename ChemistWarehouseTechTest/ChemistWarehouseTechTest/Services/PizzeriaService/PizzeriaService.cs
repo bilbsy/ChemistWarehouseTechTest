@@ -1,5 +1,6 @@
 ﻿using ChemistWarehouseTechTest.Models;
 using ChemistWarehouseTechTest.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChemistWarehouseTechTest.Services.PizzeriaService
 {
@@ -12,19 +13,33 @@ namespace ChemistWarehouseTechTest.Services.PizzeriaService
             _cwDbContext = cwDbContext;
         }
 
-        public GenericEntityResult<Pizzeria> AddPizzeria(string pizzeriaName, string location)
+        public async Task<GenericEntityResult<Pizzeria>> AddPizzeria(string pizzeriaName, string location)
         {
-            _cwDbContext.Pizzerias.Add(new Pizzeria { Id = new Guid(), Name = pizzeriaName });
+            await _cwDbContext.Pizzerias.AddAsync(new Pizzeria { Name = pizzeriaName, Location = location });
 
-            var newPizzeria = _cwDbContext.Pizzerias.FirstOrDefault(_ => _.Name == pizzeriaName);
+            await _cwDbContext.SaveChangesAsync();
+
+            var test = _cwDbContext.Pizzerias.ToList();
+            var newPizzeria = await _cwDbContext.Pizzerias.FirstOrDefaultAsync(_ => _.Name == pizzeriaName);
 
             return newPizzeria != null ? GenericEntityResult<Pizzeria>.Ok(newPizzeria) :
                 GenericEntityResult<Pizzeria>.BadRequest("Pizzeria failed to add");
         }
 
-        public GenericEntityResult<List<string>> GetPizzeriasList()
+        public async Task<GenericEntityResult<List<Pizzeria>>> GetPizzeriasList()
         {
-            return GenericEntityResult<List<string>>.Ok(_cwDbContext.Pizzerias.Select(_ => _.Name).ToList());
+            return GenericEntityResult<List<Pizzeria>>.Ok(await _cwDbContext.Pizzerias.ToListAsync());
+        }
+
+        public async Task<GenericEntityResult<Pizzeria>> GetPizzeria(Guid Id)
+        {
+            var pizzeria = await _cwDbContext.Pizzerias.Include(_ => _.Pizzas).FirstOrDefaultAsync(p => p.Id == Id);
+
+            if(pizzeria == null)
+                return GenericEntityResult<Pizzeria>.BadRequest("Pizzeria does not exist");
+
+
+            return GenericEntityResult<Pizzeria>.Ok(pizzeria);
         }
     }
 }

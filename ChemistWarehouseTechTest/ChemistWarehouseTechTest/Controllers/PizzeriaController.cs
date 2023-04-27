@@ -17,16 +17,23 @@ namespace ChemistWarehouseTechTest.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetPizzerias()
+        public async Task<IActionResult> GetPizzerias()
         {
-            var result = _pizzeriaService.GetPizzeriasList().Data;
-            return Ok(result);
+            var result = await _pizzeriaService.GetPizzeriasList();
+            return Ok(result.Data);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPizzeria(Guid Id)
+        {
+            var result = await _pizzeriaService.GetPizzeria(Id);
+            return Ok(result.Data);
         }
 
         [HttpPost]
-        public IActionResult AddPizzeria(string pizzeriaName, string location)
+        public async Task<IActionResult> AddPizzeria(string pizzeriaName, string location)
         {
-            var result = _pizzeriaService.AddPizzeria(pizzeriaName, location);
+            var result = await _pizzeriaService.AddPizzeria(pizzeriaName, location);
 
             return Ok(result.Data);
         }

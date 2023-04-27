@@ -16,18 +16,18 @@ namespace ChemistWarehouseTechTest.Controllers
         }
 
         [HttpPost]
-        public IActionResult SendOrder(Order pizzaOrder)
+        public async Task<IActionResult> SendOrder(Order pizzaOrder)
         {
-            _orderingService.OrderPizzas(pizzaOrder);
+            await _orderingService.OrderPizzas(pizzaOrder);
 
             return Ok();
         }
 
         [HttpGet]
         [Route("/GetOrders")]
-        public IActionResult GetOrders(Guid pizzeriaId)
+        public async Task<IActionResult> GetOrders(Guid pizzeriaId)
         {
-            return Ok(_orderingService.GetOrders(pizzeriaId));
+            return Ok(await _orderingService.GetOrders(pizzeriaId));
         }
     }
 }

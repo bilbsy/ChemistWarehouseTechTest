@@ -1,5 +1,6 @@
 ﻿using ChemistWarehouseTechTest.Models;
 using ChemistWarehouseTechTest.Results;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChemistWarehouseTechTest.Services.PizzaService
 {
@@ -11,19 +12,36 @@ namespace ChemistWarehouseTechTest.Services.PizzaService
             _cwDbContext = cwDbContext;
         }
 
-        public GenericEntityResult<List<Pizza>> GetMenuByLocation(string location)
+        public async Task<GenericEntityResult<List<Pizza>>> GetMenuByLocation(string location)
         {
-            if (!string.IsNullOrEmpty(location) && _cwDbContext.Pizzerias.Any(_ => _.Name == location))
-                return GenericEntityResult<List<Pizza>>.Ok(_cwDbContext.Pizzerias.First(_ => _.Name == location.ToString()).Pizzas);
+            if (string.IsNullOrEmpty(location))
+            {
+                return GenericEntityResult<List<Pizza>>.BadRequest("Location required.");
+            }
 
-            return GenericEntityResult<List<Pizza>>.BadRequest("Location not found.");
+            var pizzeriaMenu = (await _cwDbContext.Pizzerias.Include(_ => _.Pizzas).FirstOrDefaultAsync(_ => _.Location == location))?.Pizzas;
+
+            if(pizzeriaMenu == null)
+            {
+                return GenericEntityResult<List<Pizza>>.BadRequest("Location not found.");
+            }
+
+            return GenericEntityResult<List<Pizza>>.Ok(pizzeriaMenu);
+
         }
 
-        public GenericEntityResult<List<Pizza>> UpdateMenu(string pizzeriaName, List<Pizza> pizzas)
+        public async Task<GenericEntityResult<List<Pizza>>> UpdateMenu(Guid pizzeriaId, List<Pizza> pizzas)
         {
-            _cwDbContext.Pizzerias.SingleOrDefault(_ => _.Name == pizzeriaName).Pizzas = pizzas;
+            var menu = await _cwDbContext.Pizzerias.FirstOrDefaultAsync(_ => _.Id == pizzeriaId);
 
-            return GenericEntityResult<List<Pizza>>.Ok(_cwDbContext.Pizzerias.SingleOrDefault(_ => _.Name == pizzeriaName).Pizzas);
+            if (menu == null)
+                return GenericEntityResult<List<Pizza>>.BadRequest("Pizzeria provided was not found.");
+
+            menu.Pizzas = pizzas;
+
+            _cwDbContext.SaveChanges();
+
+            return GenericEntityResult<List<Pizza>>.Ok(menu.Pizzas);
         }
     }
 }

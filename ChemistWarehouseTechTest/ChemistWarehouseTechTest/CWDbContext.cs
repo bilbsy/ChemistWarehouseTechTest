@@ -6,14 +6,13 @@ namespace ChemistWarehouseTechTest
     public class CWDbContext : DbContext
     {
         public CWDbContext(DbContextOptions<CWDbContext> options) : base(options) { }
+        public virtual DbSet<Pizzeria> Pizzerias { get; set; }
 
-        public DbSet<Pizzeria> Pizzerias { get; set; }
+        public virtual DbSet<Pizza> Pizzas { get; set; }
 
-        public DbSet<Pizza> Pizzas { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
 
-        public DbSet<Order> Orders { get; set; }
-
-        public DbSet<PizzaOrder> PizzaOrders { get; set; }
+        public virtual DbSet<PizzaOrder> PizzaOrders { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -22,7 +21,12 @@ namespace ChemistWarehouseTechTest
             modelBuilder.Entity<Pizza>().HasKey(_ => _.Id);
             modelBuilder.Entity<Pizza>().Property(_ => _.Toppings)
             .HasConversion(
-                v => string.Join(',', v),
+                v => string.Join(',', v ?? new List<string>()),
+                v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
+
+            modelBuilder.Entity<PizzaOrder>().Property(_ => _.AdditionalToppings)
+            .HasConversion(
+                v => string.Join(',', v ?? new List<string>()),
                 v => v.Split(',', StringSplitOptions.RemoveEmptyEntries).ToList());
 
             var prestonPizzeria = new Pizzeria()

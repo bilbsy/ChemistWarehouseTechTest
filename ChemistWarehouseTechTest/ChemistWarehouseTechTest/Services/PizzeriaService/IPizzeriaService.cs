@@ -5,7 +5,8 @@ namespace ChemistWarehouseTechTest.Services.PizzeriaService
 {
     public interface IPizzeriaService
     {
-        GenericEntityResult<Pizzeria> AddPizzeria(string pizzeriaName, string location);
-        public GenericEntityResult<List<string>> GetPizzeriasList();
+        public Task<GenericEntityResult<Pizzeria>> AddPizzeria(string pizzeriaName, string location);
+        public Task<GenericEntityResult<List<Pizzeria>>> GetPizzeriasList();
+        public Task<GenericEntityResult<Pizzeria>> GetPizzeria(Guid Id);
     }
 }

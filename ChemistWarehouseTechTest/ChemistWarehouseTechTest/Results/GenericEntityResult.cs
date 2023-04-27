@@ -1,14 +1,16 @@
-﻿namespace ChemistWarehouseTechTest.Results
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace ChemistWarehouseTechTest.Results
 {
     public class GenericEntityResult<T>
     {
         public bool IsSuccess { get; set; }
-        
-        public string Error { get; set; }
-        
+
+        public string? Error { get; set; }
+
         public int StatusCode { get; set; }
-        
-        public T Data { get; set; }
+
+        public T? Data { get; set; }
 
         public static GenericEntityResult<T> Ok(T data)
         {
