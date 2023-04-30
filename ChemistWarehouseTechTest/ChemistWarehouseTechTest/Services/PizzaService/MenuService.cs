@@ -1,6 +1,7 @@
 ﻿using ChemistWarehouseTechTest.Models;
 using ChemistWarehouseTechTest.Results;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ChemistWarehouseTechTest.Services.PizzaService
 {
@@ -12,14 +13,9 @@ namespace ChemistWarehouseTechTest.Services.PizzaService
             _cwDbContext = cwDbContext;
         }
 
-        public async Task<GenericEntityResult<List<Pizza>>> GetMenuByLocation(string location)
+        public async Task<GenericEntityResult<List<Pizza>>> GetMenuFromPizzeria(Guid Id)
         {
-            if (string.IsNullOrEmpty(location))
-            {
-                return GenericEntityResult<List<Pizza>>.BadRequest("Location required.");
-            }
-
-            var pizzeriaMenu = (await _cwDbContext.Pizzerias.Include(_ => _.Pizzas).FirstOrDefaultAsync(_ => _.Location == location))?.Pizzas;
+            var pizzeriaMenu = await _cwDbContext.Pizzas.Where(_ => _.PizzeriaId == Id).ToListAsync();
 
             if(pizzeriaMenu == null)
             {
@@ -32,16 +28,22 @@ namespace ChemistWarehouseTechTest.Services.PizzaService
 
         public async Task<GenericEntityResult<List<Pizza>>> UpdateMenu(Guid pizzeriaId, List<Pizza> pizzas)
         {
-            var menu = await _cwDbContext.Pizzerias.FirstOrDefaultAsync(_ => _.Id == pizzeriaId);
+            var menu = await _cwDbContext.Pizzas.Where(_ => _.Id == pizzeriaId).ToListAsync();
+
+            foreach(var pizza in pizzas)
+            {
+                if (menu.Any())
+                {
+
+                }
+            }
 
             if (menu == null)
                 return GenericEntityResult<List<Pizza>>.BadRequest("Pizzeria provided was not found.");
 
-            menu.Pizzas = pizzas;
-
             _cwDbContext.SaveChanges();
 
-            return GenericEntityResult<List<Pizza>>.Ok(menu.Pizzas);
+            return GenericEntityResult<List<Pizza>>.Ok(menu);
         }
     }
 }

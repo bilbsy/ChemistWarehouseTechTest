@@ -33,7 +33,7 @@ namespace ChemistWarehouseTechTest.Services.PizzeriaService
 
         public async Task<GenericEntityResult<Pizzeria>> GetPizzeria(Guid Id)
         {
-            var pizzeria = await _cwDbContext.Pizzerias.Include(_ => _.Pizzas).FirstOrDefaultAsync(p => p.Id == Id);
+            var pizzeria = await _cwDbContext.Pizzerias.FirstOrDefaultAsync(p => p.Id == Id);
 
             if(pizzeria == null)
                 return GenericEntityResult<Pizzeria>.BadRequest("Pizzeria does not exist");

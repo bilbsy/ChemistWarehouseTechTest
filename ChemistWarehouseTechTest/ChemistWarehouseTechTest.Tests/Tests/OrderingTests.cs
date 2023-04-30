@@ -3,6 +3,7 @@ using ChemistWarehouseTechTest.Services.OrderingService;
 using ChemistWarehouseTechTest.Services.PizzeriaService;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,8 +22,9 @@ namespace ChemistWarehouseTechTest.Tests.Tests
         public async Task GetOrders()
         {
             // Arrange
-            var orderingService = new OrderingService(_fixture.CreateContext());
-            var pizzeria = (await new PizzeriaService(_fixture.CreateContext()).GetPizzeriasList()).Data?.FirstOrDefault(_ => _.Name == "Southbank Pizzeria");
+            var context = _fixture.CreateContext();
+            var orderingService = new OrderingService(context);
+            var pizzeria = (await new PizzeriaService(context).GetPizzeriasList()).Data?.FirstOrDefault(_ => _.Name == "Southbank Pizzeria");
 
             if (pizzeria == null)
                 throw new Exception("Pizzeria not found for Order tests");
@@ -41,10 +43,11 @@ namespace ChemistWarehouseTechTest.Tests.Tests
         public async Task AddOrder()
         {
             // Arrange
-            var orderingService = new OrderingService(_fixture.CreateContext());
-            var pizzeriaService = new PizzeriaService(_fixture.CreateContext());
-            var pizzerias = await pizzeriaService.GetPizzeriasList();
-            var pizzas = pizzerias.Data?.FirstOrDefault(_ => _.Name == "Southbank Pizzeria")?.Pizzas;
+            var context = _fixture.CreateContext();
+            var orderingService = new OrderingService(context);
+            var pizzeriaService = new PizzeriaService(context);
+            var pizzeriaId = (await pizzeriaService.GetPizzeriasList()).Data.FirstOrDefault(_ => _.Name == "Southbank Pizzeria").Id;
+            var pizza = await context.Pizzas.FirstOrDefaultAsync(_ => _.Name == "Capricciosa" && _.PizzeriaId == pizzeriaId);
 
             var order =
                 new Order()
@@ -56,7 +59,7 @@ namespace ChemistWarehouseTechTest.Tests.Tests
                         new PizzaOrder ()
                         {
                             Id = Guid.NewGuid(),
-                            Pizza = pizzas?.FirstOrDefault(_ => _.Name == "Capricciosa"),
+                            Pizza = pizza,
                             Amount = 5
                         }
                     }

@@ -12,7 +12,5 @@ namespace ChemistWarehouseTechTest.Models
         public string? Name { get; set; }
 
         public string? Location { get; set; }
-
-        public List<Pizza>? Pizzas { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace ChemistWarehouseTechTest.Controllers
         }
 
         [HttpGet]
+        [Route("GetPizzerias")]
         public async Task<IActionResult> GetPizzerias()
         {
             var result = await _pizzeriaService.GetPizzeriasList();
@@ -31,9 +32,9 @@ namespace ChemistWarehouseTechTest.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddPizzeria(string pizzeriaName, string location)
+        public async Task<IActionResult> AddPizzeria(string name, string location)
         {
-            var result = await _pizzeriaService.AddPizzeria(pizzeriaName, location);
+            var result = await _pizzeriaService.AddPizzeria(name, location);
 
             return Ok(result.Data);
         }

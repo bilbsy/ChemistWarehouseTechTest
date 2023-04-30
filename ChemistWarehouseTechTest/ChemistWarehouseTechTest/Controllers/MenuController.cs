@@ -17,10 +17,10 @@ namespace ChemistWarehouseTechTest.Controllers
 
 
         [HttpGet]
-        [Route("/GetMenu")]
-        public async Task<IActionResult> GetMenu(string location)
+        [Route("GetMenu")]
+        public async Task<IActionResult> GetMenu(Guid Id)
         {
-            var result = await _menuService.GetMenuByLocation(location);
+            var result = await _menuService.GetMenuFromPizzeria(Id);
 
             if (result.IsSuccess)
             {
@@ -31,7 +31,7 @@ namespace ChemistWarehouseTechTest.Controllers
         }
 
         [HttpPut]
-        [Route("/UpdateMenu")]
+        [Route("UpdateMenu")]
         public async Task<IActionResult> UpdateMenu(Guid pizzeriaId, List<Pizza> pizzas)
         {
             var result = await _menuService.UpdateMenu(pizzeriaId, pizzas);

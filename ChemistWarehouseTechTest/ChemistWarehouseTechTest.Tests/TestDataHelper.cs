@@ -27,6 +27,7 @@ namespace ChemistWarehouseTechTest.Tests
                         context.AddRange(GetPizzerias());
                         context.SaveChanges();
                         context.AddRange(GetOrders(context));
+                        context.AddRange(GetPizzas(context));
                         context.SaveChanges();
                     }
 
@@ -34,6 +35,56 @@ namespace ChemistWarehouseTechTest.Tests
                 }
             }
 
+        }
+        public static List<Pizza> GetPizzas(CWDbContext context)
+        {
+            var southbankPizzeriaId = context.Pizzerias.FirstOrDefault(_ => _.Name == "Southbank Pizzeria").Id;
+            var prestonPizzeriaId = context.Pizzerias.FirstOrDefault(_ => _.Name == "Preston Pizzeria").Id;
+
+            return new List<Pizza>()
+            {
+                new Pizza()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Capricciosa",
+                    Toppings = new List<string>() { "Cheese", "Ham", "Mushrooms", "Olives" },
+                    Price = 20,
+                    PizzeriaId = southbankPizzeriaId
+                },
+                new Pizza()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Vegetarian",
+                    Toppings = new List<string>() { "Cheese", "Mushrooms", "Capiscum", "Onion", "Olives" },
+                    Price = 17,
+                    PizzeriaId = southbankPizzeriaId
+                },
+                new Pizza()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Capricciosa",
+                    Toppings = new List<string>() { "Cheese", "Ham", "Mushrooms", "Olives" },
+                    Price = 20,
+                    PizzeriaId = prestonPizzeriaId
+                },
+                new Pizza()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Mexicana",
+                    Toppings = new List<string>() { "Cheese", "Salami", "Capiscum", "Chilli" },
+                    Price = 18,
+                    PizzeriaId = prestonPizzeriaId
+                },
+                new Pizza()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Margherita",
+                    Toppings = new List<string>() { "Cheese", "Spinach", "Ricotta", "Cherry Tomatoes" },
+                    Price = 22,
+                    PizzeriaId = prestonPizzeriaId
+                }
+            };
+                    
         }
 
         public static List<Order> GetOrders(CWDbContext context)
@@ -78,59 +129,13 @@ namespace ChemistWarehouseTechTest.Tests
                 {
                     Id = southbankPizzeriaId,
                     Location = "Southbank",
-                    Name = "Southbank Pizzeria",
-                    Pizzas = new List<Pizza>()
-                    {
-                        new Pizza()
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Capricciosa",
-                            Toppings = new List<string>() { "Cheese", "Ham", "Mushrooms", "Olives" },
-                            Price = 20,
-                            PizzeriaId = southbankPizzeriaId
-                        },
-                        new Pizza()
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Vegetarian",
-                            Toppings = new List<string>() { "Cheese", "Mushrooms", "Capiscum", "Onion", "Olives" },
-                            Price = 17,
-                            PizzeriaId = southbankPizzeriaId
-                        }
-                    }
+                    Name = "Southbank Pizzeria"
                 },
                 new Pizzeria()
                 {
                     Id = prestonPizzeriaId,
                     Name = "Preston Pizzeria",
-                    Location = "Preston",
-                    Pizzas = new List<Pizza>()
-                    {
-                        new Pizza()
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Capricciosa",
-                            Toppings = new List<string>() { "Cheese", "Ham", "Mushrooms", "Olives" },
-                            Price = 20,
-                            PizzeriaId = prestonPizzeriaId
-                        },
-                        new Pizza()
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Mexicana",
-                            Toppings = new List<string>() { "Cheese", "Salami", "Capiscum", "Chilli" },
-                            Price = 18,
-                            PizzeriaId = prestonPizzeriaId
-                        },
-                        new Pizza()
-                        {
-                            Id = Guid.NewGuid(),
-                            Name = "Margherita",
-                            Toppings = new List<string>() { "Cheese", "Spinach", "Ricotta", "Cherry Tomatoes" },
-                            Price = 22,
-                            PizzeriaId = prestonPizzeriaId
-                        },
-                    }
+                    Location = "Preston"
                 }
             };
         }
