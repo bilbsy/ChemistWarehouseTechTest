@@ -1,6 +1,6 @@
-# ChemistWarehouseTechTest
+# React-C#-Experience-Proof
 
-My React is slightly out dated and will be adding a React portion of this test over time, once I refresh that skillset using this test. Currently only the dotnet swagger UI is viewable.
+This is an evidence project for my ability in react and C#, and should be used to gauge an idea into where my skills lie in both.
 
 Setup
 
